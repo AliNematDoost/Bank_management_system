@@ -1,0 +1,15 @@
+### Create account for a customer
+POST http://localhost:8080/create/account/
+Content-Type: application/json
+
+{
+  "customerName": "John Smith",
+  "nationalId": "1234567891",
+  "birthDate": "1990-01-01T00:00:00.000Z",
+  "customerType": "NATURALPERSION",
+  "phoneNumber": "+123456789",
+  "address": "123 Main St, Anytown",
+  "postalCode": "12345"
+}
+
+###
