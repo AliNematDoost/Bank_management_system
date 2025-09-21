@@ -3,8 +3,8 @@ POST http://localhost:8080/create/account/
 Content-Type: application/json
 
 {
-  "customerName": "John Smith",
-  "nationalId": "1234567891",
+  "customerName": "John Doe",
+  "nationalId": "1234567890",
   "birthDate": "1990-01-01T00:00:00.000Z",
   "customerType": "NATURALPERSION",
   "phoneNumber": "+123456789",
@@ -12,4 +12,5 @@ Content-Type: application/json
   "postalCode": "12345"
 }
 
-###
+### get all accounts
+GET http://localhost:8080/create/account/all

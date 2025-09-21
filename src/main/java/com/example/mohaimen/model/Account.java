@@ -22,6 +22,15 @@ public class Account {
     private String address;
     private String postalCode;
     private AccountStatus accountStatus;
+    private Date AccountCreationDate;
+
+    public Date getAccountCreationDate() {
+        return AccountCreationDate;
+    }
+
+    public void setAccountCreationDate(Date accountCreationDate) {
+        AccountCreationDate = accountCreationDate;
+    }
 
     public String getNationalId() {
         return nationalId;

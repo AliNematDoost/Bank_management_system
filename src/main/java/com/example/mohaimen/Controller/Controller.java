@@ -21,6 +21,12 @@ public class Controller {
         this.service = service;
     }
 
+//    this is for getting all accounts
+    @GetMapping("/all")
+    public String getAllAccounts() {
+        return accountRepository.findAll().toString();
+    }
+
     @PostMapping("")
     public ResponseEntity<String> createAccount(@RequestBody Customer customer) {
         if (accountRepository.existsAccountByNationalId(customer.getNationalId())) {
@@ -37,6 +43,7 @@ public class Controller {
         account.setAddress(customer.getAddress());
         account.setPostalCode(customer.getPostalCode());
         account.setAccountStatus(AccountStatus.ACTIVE);
+        account.setAccountCreationDate(new java.util.Date());
 
         accountRepository.save(account);
         return ResponseEntity.ok("Account created with account number: " + service.GenerateUniqueNumberfunction());
@@ -48,6 +55,8 @@ public class Controller {
 
         Account account = accountRepository.findById(accountNumber).orElse(null);
         if (account != null) {
+            accountRepository.delete(account);
+
             account.setCustomerName(newAccountData.getCustomerName());
             account.setBirthDate(newAccountData.getBirthDate());
             account.setCustomerType(newAccountData.getCustomerType());
