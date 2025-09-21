@@ -42,6 +42,25 @@ public class Controller {
         return ResponseEntity.ok("Account created with account number: " + service.GenerateUniqueNumberfunction());
     }
 
-//    @PutMapping()
+    @PutMapping("/{accountNumber}")
+    public ResponseEntity<String> UpdateAccount(@PathVariable String accountNumber,
+                                                @RequestBody Account newAccountData) {
+
+        Account account = accountRepository.findById(accountNumber).orElse(null);
+        if (account != null) {
+            account.setCustomerName(newAccountData.getCustomerName());
+            account.setBirthDate(newAccountData.getBirthDate());
+            account.setCustomerType(newAccountData.getCustomerType());
+            account.setPhoneNumber(newAccountData.getPhoneNumber());
+            account.setAddress(newAccountData.getAddress());
+            account.setPostalCode(newAccountData.getPostalCode());
+            account.setAccountStatus(newAccountData.getAccountStatus());
+
+            accountRepository.save(account);
+            return ResponseEntity.ok("Account updated successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid account number.");
+        }
+    }
 }
 
