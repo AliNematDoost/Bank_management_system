@@ -45,7 +45,7 @@ Content-Type: application/json
 }
 
 ### find the account by account number
-GET http://localhost:8080/create/account/accountNumber/36446941041516
+GET http://localhost:8080/create/account/accountNumber/78273435913194
 
 ### find the account number by national id
 GET http://localhost:8080/create/account/nationalID/1111222234
@@ -59,7 +59,7 @@ Content-Type: application/json
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "18885544530852",
+  "accountNumber": "94087793420490",
   "amount": 100000.00
 }
 
@@ -79,7 +79,7 @@ Content-Type: application/json
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "18885544530852",
-  "toAccount": "36446941041516",
+  "fromAccount": "94087793420490",
+  "toAccount": "78273435913194",
   "amount": 1000.00
 }
