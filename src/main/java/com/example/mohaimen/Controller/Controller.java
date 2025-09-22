@@ -23,8 +23,9 @@ public class Controller {
 
 //    this is for getting all accounts
     @GetMapping("/all")
-    public String getAllAccounts() {
-        return accountRepository.findAll().toString();
+    public Account[] getAllAccounts() {
+        java.util.List<Account> accounts = accountRepository.findAll();
+        return accounts.toArray(new Account[0]);
     }
 
     @PostMapping("")
@@ -34,7 +35,8 @@ public class Controller {
         }
 
         Account account = new Account();
-        account.setAccountNumber(service.GenerateUniqueNumberfunction());
+        final String accountNumber = service.GenerateUniqueNumberfunction();
+        account.setAccountNumber(accountNumber);
         account.setNationalId(customer.getNationalId());
         account.setCustomerName(customer.getCustomerName());
         account.setBirthDate(customer.getBirthDate());
@@ -46,15 +48,15 @@ public class Controller {
         account.setAccountCreationDate(new java.util.Date());
 
         accountRepository.save(account);
-        return ResponseEntity.ok("Account created with account number: " + service.GenerateUniqueNumberfunction());
+        return ResponseEntity.ok("Account created with account number: " + accountNumber);
     }
 
     // just update fields you want and set other fields to NULL
-    @PutMapping("/{accountNumber}")
-    public ResponseEntity<String> UpdateAccount(@PathVariable String accountNumber,
+    @PutMapping("/{nationalID}")
+    public ResponseEntity<String> UpdateAccount(@PathVariable String nationalID,
                                                 @RequestBody Account newAccountData) {
 
-        Account currentAccount = accountRepository.findById(accountNumber).orElse(null);
+        Account currentAccount = accountRepository.findById(nationalID).orElse(null);
 
         // accountNumber not found
         if (currentAccount == null) {
@@ -62,7 +64,7 @@ public class Controller {
         }
 
         // Check if another account with the new national ID already exists
-        if (!currentAccount.getNationalId().equals(newAccountData.getNationalId())) {
+        if (!nationalID.equals(newAccountData.getNationalId())) {
             if (accountRepository.existsAccountByNationalId(newAccountData.getNationalId())) {
                 return ResponseEntity.badRequest().body("Another account with this national ID already exists!");
             }
@@ -92,7 +94,7 @@ public class Controller {
         }
 
         accountRepository.save(currentAccount);
-        return ResponseEntity.ok("Account updated with account number: "+ accountNumber);
+        return ResponseEntity.ok("Account updated with account number: "+ currentAccount.getAccountNumber());
     }
 }
 

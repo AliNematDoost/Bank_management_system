@@ -3,14 +3,29 @@ POST http://localhost:8080/create/account/
 Content-Type: application/json
 
 {
-  "customerName": "John Doe",
-  "nationalId": "1234567890",
-  "birthDate": "1990-01-01T00:00:00.000Z",
+  "customerName": "Sara Mohammadi",
+  "nationalId": "1111222234",
+  "birthDate": "1992-03-20T00:00:00.000Z",
   "customerType": "NATURALPERSION",
-  "phoneNumber": "+123456789",
-  "address": "123 Main St, Anytown",
-  "postalCode": "12345"
+  "phoneNumber": "09111222233",
+  "address": "Isfahan, Chahar Bagh Street",
+  "postalCode": "8173654321"
 }
 
 ### get all accounts
 GET http://localhost:8080/create/account/all
+
+### change the account date
+PUT http://localhost:8080/create/account/1111222233
+Content-Type: application/json
+
+{
+  "customerName": "Sara Mohammadi Updated",
+  "nationalId": "1111222234",
+  "birthDate": "1992-03-20T00:00:00.000Z",
+  "customerType": "NATURALPERSION",
+  "phoneNumber": "09999888777",
+  "address": "Isfahan, New Address, Enghelab Street",
+  "postalCode": "8173111111",
+  "accountStatus": "ACTIVE"
+}
