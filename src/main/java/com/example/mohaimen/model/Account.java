@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -23,13 +24,13 @@ public class Account {
     private String postalCode;
     private AccountStatus accountStatus;
     private Date AccountCreationDate;
-    private long balance;
+    private BigDecimal balance;
 
-    public long getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(long balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

@@ -9,15 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("/create/account/")
-public class Controller {
+public class AccountController {
 
     private final AccountRepository accountRepository;
     private final Service service;
-    public Controller(AccountRepository accountRepository, Service service) {
+    public AccountController(AccountRepository accountRepository, Service service) {
         this.accountRepository = accountRepository;
         this.service = service;
     }
@@ -48,7 +47,7 @@ public class Controller {
         account.setPostalCode(customer.getPostalCode());
         account.setAccountStatus(AccountStatus.ACTIVE);
         account.setAccountCreationDate(new java.util.Date());
-        account.setBalance(0L);
+        account.setBalance(java.math.BigDecimal.ZERO);
 
         accountRepository.save(account);
         return ResponseEntity.ok("Account created with account number: " + accountNumber);
