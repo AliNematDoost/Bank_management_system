@@ -10,13 +10,16 @@ import java.util.Date;
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long TrackingCode;
+
     private TransactionType transactionType;
     private BigDecimal amount;
     private Status status = Status.PENDING;
     private Date date;
 
-    public Transaction(TransactionType transactionType, BigDecimal amount, Date date) {
+    public Transaction(TransactionType transactionType,
+                       BigDecimal amount,
+                       Date date) {
         this.amount = amount;
         this.transactionType = transactionType;
         this.date = date;
@@ -42,11 +45,27 @@ public class Transaction {
         this.transactionType = transactionType;
     }
 
-    public Long getId() {
-        return id;
+    public Long getTrackingCode() {
+        return TrackingCode;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTrackingCode(Long id) {
+        this.TrackingCode = id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }
