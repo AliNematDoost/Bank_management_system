@@ -45,7 +45,7 @@ Content-Type: application/json
 }
 
 ### find the account by account number
-GET http://localhost:8080/create/account/accountNumber/78273435913194
+GET http://localhost:8080/create/account/accountNumber/49785737311071
 
 ### find the account number by national id
 GET http://localhost:8080/create/account/nationalID/1111222234
@@ -59,7 +59,7 @@ Content-Type: application/json
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "94087793420490",
+  "accountNumber": "49785737311071",
   "amount": 100000.00
 }
 
