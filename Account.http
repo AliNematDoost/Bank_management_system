@@ -59,7 +59,7 @@ Content-Type: application/json
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "51877629564984",
+  "accountNumber": "48691437722038",
   "amount": 100000.00
 }
 
@@ -83,3 +83,8 @@ Content-Type: application/json
   "toAccount": "50946897661025",
   "amount": 1000.00
 }
+
+### get transaction by tracking code
+GET http://localhost:8080/Transaction/1
+
+

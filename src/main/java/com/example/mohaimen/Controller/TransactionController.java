@@ -144,5 +144,20 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
+    @GetMapping("/{trackingCode}")
+    public ResponseEntity<?> getTransaction(@PathVariable Long trackingCode) {
+        Optional<Transaction> transaction = transactionRepository.findById(trackingCode);
 
+        // tracking code in not found
+        if (transaction.isEmpty()) {
+            return ResponseEntity.badRequest().body("Transaction not found!");
+        }
+
+        // transaction is FAILED or SUCCESS
+        if (transaction.get().getStatus().equals(Status.FAILED)) {
+            return ResponseEntity.badRequest().body("Transaction is failed at " + transaction.get().getDate());
+        } else {
+            return ResponseEntity.ok(transaction.get());
+        }
+    }
 }
