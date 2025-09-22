@@ -8,6 +8,7 @@ import com.example.mohaimen.model.Customer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
@@ -21,13 +22,14 @@ public class Controller {
         this.service = service;
     }
 
-//    this is for getting all accounts
+    // JSON ARRAY OF ALL USERS
     @GetMapping("/all")
     public Account[] getAllAccounts() {
         java.util.List<Account> accounts = accountRepository.findAll();
         return accounts.toArray(new Account[0]);
     }
 
+    // CREATE A NEW ACCOUNT
     @PostMapping("")
     public ResponseEntity<String> createAccount(@RequestBody Customer customer) {
         if (accountRepository.existsAccountByNationalId(customer.getNationalId())) {
@@ -51,6 +53,7 @@ public class Controller {
         return ResponseEntity.ok("Account created with account number: " + accountNumber);
     }
 
+    // UPDATE AN ACCOUNT
     // just update fields you want and set other fields to NULL
     @PutMapping("/{nationalID}")
     public ResponseEntity<String> UpdateAccount(@PathVariable String nationalID,
@@ -95,6 +98,23 @@ public class Controller {
 
         accountRepository.save(currentAccount);
         return ResponseEntity.ok("Account updated with account number: "+ currentAccount.getAccountNumber());
+    }
+
+    // RETRIEVE AN ACCOUNT BY NATIONAL ID
+    @GetMapping("/accountNumber/{accountNumber}" )
+    public Account[] getAccount(@PathVariable String accountNumber) {
+        List<Account> account = accountRepository.findAllByAccountNumber(accountNumber);
+        return account.toArray(new Account[0]);
+    }
+
+    // get account number by national id
+    @GetMapping("/nationalID/{nationalID}" )
+    public String getAccountNumber(@PathVariable String nationalID) {
+        Account account = accountRepository.findById(nationalID).orElse(null);
+        if (account == null) {
+            return "Account not found!";
+        }
+        return account.getAccountNumber();
     }
 }
 

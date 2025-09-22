@@ -29,3 +29,9 @@ Content-Type: application/json
   "postalCode": "8173111111",
   "accountStatus": "ACTIVE"
 }
+
+### find the account by account number
+GET http://localhost:8080/create/account/accountNumber/95341342467317
+
+### find the account number by national id
+GET http://localhost:8080/create/account/nationalID/1111222234
