@@ -48,6 +48,7 @@ public class Controller {
         account.setPostalCode(customer.getPostalCode());
         account.setAccountStatus(AccountStatus.ACTIVE);
         account.setAccountCreationDate(new java.util.Date());
+        account.setBalance(0L);
 
         accountRepository.save(account);
         return ResponseEntity.ok("Account created with account number: " + accountNumber);
@@ -115,6 +116,16 @@ public class Controller {
             return "Account not found!";
         }
         return account.getAccountNumber();
+    }
+
+    // get the account balance by account number
+    @GetMapping("/balance/{accountNumber}" )
+    public String getAccountBalance(@PathVariable String accountNumber) {
+        List<Account> account = accountRepository.findAllByAccountNumber(accountNumber);
+        if (account.isEmpty()) {
+            return "Account not found!";
+        }
+        return "Account balance: " + account.toArray(new Account[0])[0].getBalance();
     }
 }
 

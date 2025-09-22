@@ -23,6 +23,15 @@ public class Account {
     private String postalCode;
     private AccountStatus accountStatus;
     private Date AccountCreationDate;
+    private long balance;
+
+    public long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(long balance) {
+        this.balance = balance;
+    }
 
     public Date getAccountCreationDate() {
         return AccountCreationDate;

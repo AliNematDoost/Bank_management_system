@@ -31,7 +31,10 @@ Content-Type: application/json
 }
 
 ### find the account by account number
-GET http://localhost:8080/create/account/accountNumber/95341342467317
+GET http://localhost:8080/create/account/accountNumber/15166300039252
 
 ### find the account number by national id
 GET http://localhost:8080/create/account/nationalID/1111222234
+
+### get the account balance by account number
+GET http://localhost:8080/create/account/balance/15166300039252
