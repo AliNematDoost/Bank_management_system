@@ -49,27 +49,50 @@ public class Controller {
         return ResponseEntity.ok("Account created with account number: " + service.GenerateUniqueNumberfunction());
     }
 
+    // just update fields you want and set other fields to NULL
     @PutMapping("/{accountNumber}")
     public ResponseEntity<String> UpdateAccount(@PathVariable String accountNumber,
                                                 @RequestBody Account newAccountData) {
 
-        Account account = accountRepository.findById(accountNumber).orElse(null);
-        if (account != null) {
-            accountRepository.delete(account);
+        Account currentAccount = accountRepository.findById(accountNumber).orElse(null);
 
-            account.setCustomerName(newAccountData.getCustomerName());
-            account.setBirthDate(newAccountData.getBirthDate());
-            account.setCustomerType(newAccountData.getCustomerType());
-            account.setPhoneNumber(newAccountData.getPhoneNumber());
-            account.setAddress(newAccountData.getAddress());
-            account.setPostalCode(newAccountData.getPostalCode());
-            account.setAccountStatus(newAccountData.getAccountStatus());
-
-            accountRepository.save(account);
-            return ResponseEntity.ok("Account updated successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid account number.");
+        // accountNumber not found
+        if (currentAccount == null) {
+            return ResponseEntity.badRequest().body("Account not found!");
         }
+
+        // Check if another account with the new national ID already exists
+        if (!currentAccount.getNationalId().equals(newAccountData.getNationalId())) {
+            if (accountRepository.existsAccountByNationalId(newAccountData.getNationalId())) {
+                return ResponseEntity.badRequest().body("Another account with this national ID already exists!");
+            }
+            currentAccount.setNationalId(newAccountData.getNationalId());
+        }
+
+        if (newAccountData.getCustomerName() != null) {
+            currentAccount.setCustomerName(newAccountData.getCustomerName());
+        }
+        if (newAccountData.getBirthDate() != null) {
+            currentAccount.setBirthDate(newAccountData.getBirthDate());
+        }
+        if (newAccountData.getCustomerType() != null) {
+            currentAccount.setCustomerType(newAccountData.getCustomerType());
+        }
+        if (newAccountData.getPhoneNumber() != null) {
+            currentAccount.setPhoneNumber(newAccountData.getPhoneNumber());
+        }
+        if (newAccountData.getAddress() != null) {
+            currentAccount.setAddress(newAccountData.getAddress());
+        }
+        if (newAccountData.getPostalCode() != null) {
+            currentAccount.setPostalCode(newAccountData.getPostalCode());
+        }
+        if (newAccountData.getAccountStatus() != null) {
+            currentAccount.setAccountStatus(newAccountData.getAccountStatus());
+        }
+
+        accountRepository.save(currentAccount);
+        return ResponseEntity.ok("Account updated with account number: "+ accountNumber);
     }
 }
 
