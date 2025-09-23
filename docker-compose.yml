@@ -1,23 +1,26 @@
 services:
-  oracle-db:
-    image: container-registry.oracle.com/database/express:21.3.0-xe
-    container_name: mohaimen-oracle
-    environment:
-      - ORACLE_PWD=Oracle123456  # This will be the SYS and SYSTEM password
-      - ORACLE_CHARACTERSET=AL32UTF8
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
     ports:
-      - "1521:1521"   # Oracle database port
-      - "5500:5500"   # Oracle Enterprise Manager port
-    volumes:
-      - oracle-data:/opt/oracle/oradata
-      - ./oracle-init:/opt/oracle/scripts/startup  # Mount our init scripts
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: myuser
+      RABBITMQ_DEFAULT_PASS: mypassword
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "sqlplus", "-L", "system/Oracle123456@//localhost:1521/XE", "@/dev/null"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+
+  oracle-db:
+    image: wnameless/oracle-xe-11g-r2
+    container_name: oracle-db
+    ports:
+      - "1521:1521"
+      - "8081:8080"
+    environment:
+      - ORACLE_ALLOW_REMOTE=true
+    restart: unless-stopped
+    # This Oracle image is only ~150MB
 
 volumes:
   oracle-data:
-    driver: local
