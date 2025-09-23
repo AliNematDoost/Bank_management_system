@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 @ConfigurationProperties(prefix = "transaction.fee")
 public class TransactionFeeConfig {
 
-    private BigDecimal percentage = BigDecimal.valueOf(0.01);
-    private BigDecimal minimum = BigDecimal.valueOf(500);
-    private BigDecimal maximum = BigDecimal.valueOf(10_000);
-    private String bankAccountNumber = "10_000_000_000_000";
+    private BigDecimal percentage;
+    private BigDecimal minimum;
+    private BigDecimal maximum;
+    private String bankAccountNumber;
 
     public BigDecimal getPercentage() {
         return percentage;
