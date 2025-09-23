@@ -1,9 +1,6 @@
 package com.example.mohaimen.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -17,7 +14,13 @@ public class Account {
     private String customerName;
     @Column(name = "account_number", nullable = false, unique = true)
     private String accountNumber;
+
+    @Column(name = "birth_date")
+    @Temporal(TemporalType.DATE)
     private Date birthDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "customer_type")
     private CustomerType customerType;
     private String phoneNumber;
     private String address;

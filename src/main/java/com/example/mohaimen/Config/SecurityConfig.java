@@ -53,12 +53,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/h2-console/**").permitAll()
+                        // Remove H2 console access since we're using Oracle now
                         .anyRequest().authenticated())
                 .httpBasic(httpBasic ->
-                        httpBasic.authenticationEntryPoint(authenticationEntryPoint))
-                .headers(headers ->
-                        headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+                        httpBasic.authenticationEntryPoint(authenticationEntryPoint));
 
         return http.build();
 
