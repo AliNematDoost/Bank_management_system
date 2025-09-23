@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 
 public class Transfer {
     private TransactionType transactionType = TransactionType.TRANSFER;
-//    private String accountNumber;
-//    private BigDecimal amount;
     private String fromAccount;
     private String toAccount;
     private BigDecimal amount;

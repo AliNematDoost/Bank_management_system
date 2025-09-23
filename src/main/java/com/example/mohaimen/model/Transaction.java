@@ -13,21 +13,42 @@ public class Transaction {
     private Long TrackingCode;
 
     private TransactionType transactionType;
+    private String sourceAccount;
+    private String destinationAccount;
     private BigDecimal amount;
     private Status status = Status.PENDING;
     private Date date;
 
     public Transaction(TransactionType transactionType,
+                       String sourceAccount,
+                       String destinationAccount,
                        BigDecimal amount,
                        Date date) {
         this.amount = amount;
         this.transactionType = transactionType;
         this.date = date;
+        this.sourceAccount = sourceAccount;
+        this.destinationAccount = destinationAccount;
     }
 
     public Transaction() {
     }
 
+    public String getSourceAccount() {
+        return sourceAccount;
+    }
+
+    public void setSourceAccount(String sourceAccount) {
+        this.sourceAccount = sourceAccount;
+    }
+
+    public String getDestinationAccount() {
+        return destinationAccount;
+    }
+
+    public void setDestinationAccount(String destinationAccount) {
+        this.destinationAccount = destinationAccount;
+    }
 
     public Status getStatus() {
         return status;

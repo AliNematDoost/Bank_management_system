@@ -35,7 +35,11 @@ public class TransactionController {
 
         // account not found
         if (optAccount.isEmpty()) {
-            Transaction transaction = new Transaction(depositTran.getTransactionType(), amount, new Date());
+            Transaction transaction = new Transaction(depositTran.getTransactionType(),
+                    null,
+                    null,
+                    amount,
+                    new Date());
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
             return ResponseEntity.badRequest().body("Account not found!");
@@ -45,7 +49,11 @@ public class TransactionController {
 
         // transaction type not valid
         if (depositTran.getTransactionType() == null) {
-            Transaction transaction = new Transaction(TransactionType.INVALID, amount, new Date());
+            Transaction transaction = new Transaction(TransactionType.INVALID,
+                    null,
+                    null,
+                    amount,
+                    new Date());
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
             return ResponseEntity.badRequest().body("Transaction type not valid!");
@@ -55,14 +63,20 @@ public class TransactionController {
             account.setBalance(account.getBalance().add(amount).subtract(transactionFee));
             accountRepository.save(account);
 
-            Transaction transaction1 = new Transaction(TransactionType.DEPOSIT, amount, new Date());
+            Transaction transaction1 = new Transaction(TransactionType.DEPOSIT,
+                    "Bank",
+                    accountNumber,
+                    amount,
+                    new Date());
             transaction1.setStatus(Status.SUCCESS);
             transactionRepository.save(transaction1);
             return ResponseEntity.ok(transaction1);
         } else if (depositTran.getTransactionType().equals(TransactionType.WITHDRAW)) {
             if (account.getBalance().compareTo(amount.add(transactionFee)) < 0) {
                 Transaction transaction = new Transaction(TransactionType.WITHDRAW,
-                        depositTran.getAmount(),
+                        accountNumber,
+                        "Bank",
+                        amount,
                         new Date());
                 transaction.setStatus(Status.FAILED);
                 transactionRepository.save(transaction);
@@ -72,7 +86,11 @@ public class TransactionController {
             account.setBalance(account.getBalance().subtract(amount).subtract(transactionFee));
             accountRepository.save(account);
 
-            Transaction transaction2 = new Transaction(TransactionType.WITHDRAW, amount, new Date());
+            Transaction transaction2 = new Transaction(TransactionType.WITHDRAW,
+                    accountNumber,
+                    "Bank",
+                    amount,
+                    new Date());
             transaction2.setStatus(Status.SUCCESS);
             transactionRepository.save(transaction2);
             return ResponseEntity.ok(transaction2);
@@ -88,11 +106,16 @@ public class TransactionController {
         // check if accounts exist
         Optional<Account> optFromAccount = accountRepository.findByAccountNumber(transfer.getFromAccount());
         Optional<Account> optToAccount = accountRepository.findByAccountNumber(transfer.getToAccount());
+        Account fromAccount = optFromAccount.orElse(null);
+        Account toAccount = optToAccount.orElse(null);
 
         if (optFromAccount.isEmpty() || optToAccount.isEmpty()) {
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
+                    fromAccount != null ? fromAccount.getAccountNumber() : null,
+                    toAccount != null ? toAccount.getAccountNumber() : null,
                     transfer.getAmount(),
                     new Date());
+
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
             return ResponseEntity.badRequest().body("One or both accounts not found!");
@@ -101,6 +124,8 @@ public class TransactionController {
         // check if fromAccount and toAccount are different
         if (transfer.getFromAccount().equals(transfer.getToAccount())) {
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
+                    optFromAccount.get().getAccountNumber(),
+                    optToAccount.get().getAccountNumber(),
                     transfer.getAmount(),
                     new Date());
             transaction.setStatus(Status.FAILED);
@@ -109,11 +134,11 @@ public class TransactionController {
         }
 
         // check if fromAccount and toAccount are active
-        Account fromAccount = optFromAccount.get();
-        Account toAccount = optToAccount.get();
         if (fromAccount.getAccountStatus().equals(AccountStatus.INACTIVE) ||
                 toAccount.getAccountStatus().equals(AccountStatus.INACTIVE)) {
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
+                    fromAccount.getAccountNumber(),
+                    toAccount.getAccountNumber(),
                     transfer.getAmount(),
                     new Date());
             transaction.setStatus(Status.FAILED);
@@ -125,6 +150,8 @@ public class TransactionController {
         BigDecimal amount = transfer.getAmount();
         if (fromAccount.getBalance().compareTo(amount.add(transactionFee)) < 0) {
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
+                    fromAccount.getAccountNumber(),
+                    toAccount.getAccountNumber(),
                     transfer.getAmount(),
                     new Date());
             transaction.setStatus(Status.FAILED);
@@ -138,7 +165,11 @@ public class TransactionController {
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
-        Transaction transaction = new Transaction(TransactionType.TRANSFER, amount, new Date());
+        Transaction transaction = new Transaction(TransactionType.TRANSFER,
+                fromAccount.getAccountNumber(),
+                toAccount.getAccountNumber(),
+                amount,
+                new Date());
         transaction.setStatus(Status.SUCCESS);
         transactionRepository.save(transaction);
         return ResponseEntity.ok(transaction);
