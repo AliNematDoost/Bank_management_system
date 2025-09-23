@@ -1,7 +1,7 @@
 ### Create account for a customer
 POST http://localhost:8080/create/account/
 Content-Type: application/json
-#Authorization: Basic YWRtaW46YWRtaW4xMjM0
+Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "customerName": "Sara Mohammadi",

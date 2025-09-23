@@ -26,6 +26,11 @@ public class SecurityConfig {
     @Value("${app.security.users.admin.password}")
     private String adminPassword;
 
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    public SecurityConfig(CustomAuthenticationEntryPoint authenticationEntryPoint) {
+        this.authenticationEntryPoint = authenticationEntryPoint;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -50,7 +55,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(httpBasic -> {})
+                .httpBasic(httpBasic ->
+                        httpBasic.authenticationEntryPoint(authenticationEntryPoint))
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
