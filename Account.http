@@ -59,8 +59,8 @@ Content-Type: application/json
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "59616557906334",
-  "amount": 1000000000.00
+  "accountNumber": "40789221480765",
+  "amount": 2500000000.00
 }
 
 ### withdraw money from the account
@@ -69,8 +69,8 @@ Content-Type: application/json
 
 {
   "transactionType": "WITHDRAW",
-  "accountNumber": "72360644948663",
-  "amount": 80.00
+  "accountNumber": "40789221480765",
+  "amount": 25000.00
 }
 
 ### transfer money from one account to another
@@ -79,17 +79,18 @@ Content-Type: application/json
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "59616557906334",
-  "toAccount": "18578663689496",
-  "amount": 1000000.00
+  "fromAccount": "49997353183693",
+  "toAccount": "40789221480765",
+  "amount": 100.00
 }
 
 ### get transaction by tracking code
 GET http://localhost:8080/Transaction/4
 
 
+
 ### 1. Get all transactions for a specific account
-GET http://localhost:8080/Transaction/history?accountNumber=18578663689496
+GET http://localhost:8080/Transaction/history?accountNumber=40789221480765
 
 ### 2. Get transactions with date range
 GET http://localhost:8080/Transaction/history?accountNumber=18578663689496&fromDate=2024-03-21&toDate=2024-09-23
@@ -101,13 +102,13 @@ GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&minAm
 GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&transactionType=DEPOSIT&size=100&page=0&sortBy=date&sortDir=desc
 
 ### 5. Get paginated results
-GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&page=1&size=5
+GET http://localhost:8080/Transaction/history?accountNumber=40789221480765&page=1&size=5
 
 ### 6. Complex filter: TRANSFER transactions over 500 in last month
-GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&transactionType=TRANSFER&minAmount=500&fromDate=2024-08-01
+GET http://localhost:8080/Transaction/history?accountNumber=40789221480765&transactionType=TRANSFER&minAmount=500&fromDate=2024-08-01
 
 ### 7. Get all transactions from a specific source account
-GET http://localhost:8080/Transaction/history?sourceAccount=49785737311071
+GET http://localhost:8080/Transaction/history?sourceAccountNumber=40789221480765
 
 ### 8. Get all transactions to a specific destination account
-GET http://localhost:8080/Transaction/history?destinationAccount=78273435913194
+GET http://localhost:8080/Transaction/history?destinationAccountNumber=78273435913194
