@@ -2,6 +2,7 @@ package com.example.mohaimen.Controller;
 
 import com.example.mohaimen.Repository.AccountRepository;
 import com.example.mohaimen.Repository.TransactionRepository;
+import com.example.mohaimen.Service.TransactionFeeCalculator;
 import com.example.mohaimen.Service.TransactionQuery;
 import com.example.mohaimen.model.*;
 import org.springframework.data.domain.Page;
@@ -22,14 +23,16 @@ import java.util.Optional;
 @RequestMapping("/Transaction")
 public class TransactionController {
 
-    final BigDecimal transactionFee = BigDecimal.valueOf(720.00);
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final TransactionFeeCalculator transactionFeeCalculator;
 
-    final AccountRepository accountRepository;
-    final TransactionRepository transactionRepository;
-
-    public TransactionController(AccountRepository accountRepository, TransactionRepository transactionRepository) {
+    public TransactionController(AccountRepository accountRepository,
+                                 TransactionRepository transactionRepository,
+                                 TransactionFeeCalculator transactionFeeCalculator) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.transactionFeeCalculator = transactionFeeCalculator;
     }
 
     // DEPOSIT AMOUNT TO AN ACCOUNT
@@ -67,11 +70,11 @@ public class TransactionController {
         }
 
         if (depositTran.getTransactionType().equals(TransactionType.DEPOSIT)) {
-            account.setBalance(account.getBalance().add(amount).subtract(transactionFee));
+            account.setBalance(account.getBalance().add(amount));
             accountRepository.save(account);
 
             Transaction transaction1 = new Transaction(TransactionType.DEPOSIT,
-                    "Bank",
+                    transactionFeeCalculator.getBankAccountNumber(),
                     accountNumber,
                     amount,
                     new Date());
@@ -79,10 +82,10 @@ public class TransactionController {
             transactionRepository.save(transaction1);
             return ResponseEntity.ok(transaction1);
         } else if (depositTran.getTransactionType().equals(TransactionType.WITHDRAW)) {
-            if (account.getBalance().compareTo(amount.add(transactionFee)) < 0) {
+            if (account.getBalance().compareTo(amount) < 0) {
                 Transaction transaction = new Transaction(TransactionType.WITHDRAW,
                         accountNumber,
-                        "Bank",
+                        transactionFeeCalculator.getBankAccountNumber(),
                         amount,
                         new Date());
                 transaction.setStatus(Status.FAILED);
@@ -90,12 +93,12 @@ public class TransactionController {
                 return ResponseEntity.badRequest().body("Not enough balance in account!");
             }
 
-            account.setBalance(account.getBalance().subtract(amount).subtract(transactionFee));
+            account.setBalance(account.getBalance().subtract(amount));
             accountRepository.save(account);
 
             Transaction transaction2 = new Transaction(TransactionType.WITHDRAW,
                     accountNumber,
-                    "Bank",
+                    transactionFeeCalculator.getBankAccountNumber(),
                     amount,
                     new Date());
             transaction2.setStatus(Status.SUCCESS);
@@ -155,7 +158,10 @@ public class TransactionController {
 
         // check if fromAccount has sufficient balance
         BigDecimal amount = transfer.getAmount();
-        if (fromAccount.getBalance().compareTo(amount.add(transactionFee)) < 0) {
+        // calculate transaction fee
+        BigDecimal fee = transactionFeeCalculator.CalculateFee(amount);
+
+        if (fromAccount.getBalance().compareTo(amount.add(fee)) < 0) {
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
                     fromAccount.getAccountNumber(),
                     toAccount.getAccountNumber(),
@@ -167,11 +173,12 @@ public class TransactionController {
         }
 
         // transfer amount
-        fromAccount.setBalance(fromAccount.getBalance().subtract(amount).subtract(transactionFee));
+        fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
         toAccount.setBalance(toAccount.getBalance().add(amount));
         accountRepository.save(fromAccount);
         accountRepository.save(toAccount);
 
+        // create transaction record for transfer
         Transaction transaction = new Transaction(TransactionType.TRANSFER,
                 fromAccount.getAccountNumber(),
                 toAccount.getAccountNumber(),
@@ -179,6 +186,18 @@ public class TransactionController {
                 new Date());
         transaction.setStatus(Status.SUCCESS);
         transactionRepository.save(transaction);
+
+        // create transaction for transaction fee
+        fromAccount.setBalance(fromAccount.getBalance().subtract(fee));
+        accountRepository.save(fromAccount);
+
+        Transaction TransactionFee = new Transaction(TransactionType.FEE,
+                fromAccount.getAccountNumber(),
+                transactionFeeCalculator.getBankAccountNumber(),
+                fee,
+                new Date());
+        TransactionFee.setStatus(Status.SUCCESS);
+        transactionRepository.save(TransactionFee);
         return ResponseEntity.ok(transaction);
     }
 

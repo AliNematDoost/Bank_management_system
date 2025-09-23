@@ -5,10 +5,10 @@ import com.example.mohaimen.Repository.AccountRepository;
 import java.util.concurrent.ThreadLocalRandom;
 
 @org.springframework.stereotype.Service
-public class Service {
+public class AccountNumberGenerator {
 
     private final AccountRepository accountRepository;
-    public Service(AccountRepository accountRepository) {
+    public AccountNumberGenerator(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 

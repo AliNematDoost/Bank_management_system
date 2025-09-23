@@ -1,7 +1,7 @@
 package com.example.mohaimen.Controller;
 
 import com.example.mohaimen.Repository.AccountRepository;
-import com.example.mohaimen.Service.Service;
+import com.example.mohaimen.Service.AccountNumberGenerator;
 import com.example.mohaimen.model.Account;
 import com.example.mohaimen.model.AccountStatus;
 import com.example.mohaimen.model.Customer;
@@ -15,10 +15,10 @@ import java.util.List;
 public class AccountController {
 
     private final AccountRepository accountRepository;
-    private final Service service;
-    public AccountController(AccountRepository accountRepository, Service service) {
+    private final AccountNumberGenerator accountNumberGenerator;
+    public AccountController(AccountRepository accountRepository, AccountNumberGenerator accountNumberGenerator) {
         this.accountRepository = accountRepository;
-        this.service = service;
+        this.accountNumberGenerator = accountNumberGenerator;
     }
 
     // JSON ARRAY OF ALL USERS
@@ -36,7 +36,7 @@ public class AccountController {
         }
 
         Account account = new Account();
-        final String accountNumber = service.GenerateUniqueNumberfunction();
+        final String accountNumber = accountNumberGenerator.GenerateUniqueNumberfunction();
         account.setAccountNumber(accountNumber);
         account.setNationalId(customer.getNationalId());
         account.setCustomerName(customer.getCustomerName());

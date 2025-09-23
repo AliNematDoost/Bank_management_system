@@ -51,7 +51,7 @@ GET http://localhost:8080/create/account/accountNumber/50946897661025
 GET http://localhost:8080/create/account/nationalID/1111222234
 
 ### get the account balance by account number
-GET http://localhost:8080/create/account/balance/28453713644339
+GET http://localhost:8080/create/account/balance/61038088141748
 
 ### deposit money to the account
 POST http://localhost:8080/Transaction
@@ -59,7 +59,7 @@ Content-Type: application/json
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "40789221480765",
+  "accountNumber": "61038088141748",
   "amount": 2500000000.00
 }
 
@@ -79,9 +79,9 @@ Content-Type: application/json
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "49997353183693",
-  "toAccount": "40789221480765",
-  "amount": 100.00
+  "fromAccount": "61038088141748",
+  "toAccount": "40653627191025",
+  "amount": 10000000.00
 }
 
 ### get transaction by tracking code
