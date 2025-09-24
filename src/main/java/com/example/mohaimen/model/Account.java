@@ -11,20 +11,30 @@ public class Account {
     @Id
     @Column(name = "national_id", nullable = false, unique = true)
     private String nationalId;
+
+    @Column(name = "customer_name", nullable = false)
     private String customerName;
+
     @Column(name = "account_number", nullable = false, unique = true)
     private String accountNumber;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "customer_type")
+    @Column(name = "customer_type", nullable = false)
     private CustomerType customerType;
+
+    @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
+
+    @Column(name = "address", nullable = false)
     private String address;
+
+    @Column(name = "postal_code", nullable = false)
     private String postalCode;
+
     private AccountStatus accountStatus;
     private Date AccountCreationDate;
     private BigDecimal balance;

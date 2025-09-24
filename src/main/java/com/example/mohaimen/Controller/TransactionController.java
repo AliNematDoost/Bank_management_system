@@ -148,7 +148,10 @@ public class TransactionController {
 
         // check if fromAccount and toAccount are active
         if (fromAccount.getAccountStatus().equals(AccountStatus.INACTIVE) ||
-                toAccount.getAccountStatus().equals(AccountStatus.INACTIVE)) {
+                toAccount.getAccountStatus().equals(AccountStatus.INACTIVE) ||
+                fromAccount.getAccountStatus().equals(AccountStatus.BLOCKED) ||
+                toAccount.getAccountStatus().equals(AccountStatus.BLOCKED)) {
+
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
                     fromAccount.getAccountNumber(),
                     toAccount.getAccountNumber(),
