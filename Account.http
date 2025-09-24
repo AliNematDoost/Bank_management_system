@@ -18,7 +18,6 @@ POST http://localhost:8080/create/account/
 Content-Type: application/json
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
-
 {
   "customerName": "Ali Rezaei",
   "nationalId": "2222333344",
@@ -46,12 +45,12 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
   "customerType": "NATURALPERSION",
   "phoneNumber": "09999888777",
   "address": "Isfahan, New Address, Enghelab Street",
-  "postalCode": "8173111111",
+  "postalCode": "8173111112",
   "accountStatus": "ACTIVE"
 }
 
 ### find the account by account number
-GET http://localhost:8080/create/account/accountNumber/23782805730063
+GET http://localhost:8080/create/account/accountNumber/43318537612452
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
@@ -60,7 +59,7 @@ GET http://localhost:8080/create/account/nationalID/1111222234
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### get the account balance by account number
-GET http://localhost:8080/create/account/balance/23782805730063
+GET http://localhost:8080/create/account/balance/43318537612452
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### deposit money to the account
@@ -70,8 +69,8 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "28589769858450",
-  "amount": 2900000000.00
+  "accountNumber": "43121265728963",
+  "amount": 2500000000.00
 }
 
 ### withdraw money from the account
@@ -81,7 +80,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "WITHDRAW",
-  "accountNumber": "28589769858450",
+  "accountNumber": "43318537612452",
   "amount": 250000.00
 }
 
@@ -92,19 +91,18 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "28589769858450",
-  "toAccount": "23782805730063",
-  "amount": 10000000.00
+  "fromAccount": "43121265728963",
+  "toAccount": "43318537612452",
+  "amount": 15000000.00
 }
 
 ### get transaction by tracking code
-GET http://localhost:8080/Transaction/2
+GET http://localhost:8080/Transaction/6
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
-
 ### 1. Get all transactions for a specific account
-GET http://localhost:8080/Transaction/history?accountNumber=28589769858450
+GET http://localhost:8080/Transaction/history?accountNumber=43318537612452
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 2. Get transactions with date range
@@ -128,9 +126,9 @@ GET http://localhost:8080/Transaction/history?accountNumber=28589769858450&trans
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 7. Get all transactions from a specific source account
-GET http://localhost:8080/Transaction/history?sourceAccountNumber=28589769858450
+GET http://localhost:8080/Transaction/history?sourceAccountNumber=43318537612452
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 8. Get all transactions to a specific destination account
-GET http://localhost:8080/Transaction/history?destinationAccountNumber=23782805730063
+GET http://localhost:8080/Transaction/history?destinationAccountNumber=43318537612452
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
