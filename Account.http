@@ -70,8 +70,8 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "23782805730063",
-  "amount": 2500000000.00
+  "accountNumber": "28589769858450",
+  "amount": 2900000000.00
 }
 
 ### withdraw money from the account
@@ -81,8 +81,8 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "WITHDRAW",
-  "accountNumber": "40789221480765",
-  "amount": 25000.00
+  "accountNumber": "28589769858450",
+  "amount": 250000.00
 }
 
 ### transfer money from one account to another
@@ -92,23 +92,23 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "61038088141748",
-  "toAccount": "40653627191025",
+  "fromAccount": "28589769858450",
+  "toAccount": "23782805730063",
   "amount": 10000000.00
 }
 
 ### get transaction by tracking code
-GET http://localhost:8080/Transaction/4
+GET http://localhost:8080/Transaction/2
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
 
 ### 1. Get all transactions for a specific account
-GET http://localhost:8080/Transaction/history?accountNumber=40789221480765
+GET http://localhost:8080/Transaction/history?accountNumber=28589769858450
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 2. Get transactions with date range
-GET http://localhost:8080/Transaction/history?accountNumber=18578663689496&fromDate=2024-03-21&toDate=2024-09-23
+GET http://localhost:8080/Transaction/history?accountNumber=28589769858450&fromDate=2024-03-21&toDate=2024-09-23
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 3. Get transactions with amount filter
@@ -116,7 +116,7 @@ GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&minAm
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 4. Get last 100 deposit transactions
-GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&transactionType=DEPOSIT&size=100&page=0&sortBy=date&sortDir=desc
+GET http://localhost:8080/Transaction/history?accountNumber=28589769858450&transactionType=DEPOSIT&size=100&page=0&sortBy=date&sortDir=desc
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 5. Get paginated results
@@ -124,13 +124,13 @@ GET http://localhost:8080/Transaction/history?accountNumber=40789221480765&page=
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 6. Complex filter: TRANSFER transactions over 500 in last month
-GET http://localhost:8080/Transaction/history?accountNumber=40789221480765&transactionType=TRANSFER&minAmount=500&fromDate=2024-08-01
+GET http://localhost:8080/Transaction/history?accountNumber=28589769858450&transactionType=TRANSFER&minAmount=500&fromDate=2024-08-01
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 7. Get all transactions from a specific source account
-GET http://localhost:8080/Transaction/history?sourceAccountNumber=40789221480765
+GET http://localhost:8080/Transaction/history?sourceAccountNumber=28589769858450
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 8. Get all transactions to a specific destination account
-GET http://localhost:8080/Transaction/history?destinationAccountNumber=78273435913194
+GET http://localhost:8080/Transaction/history?destinationAccountNumber=23782805730063
 Authorization: Basic YWRtaW46YWRtaW4xMjM0

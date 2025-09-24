@@ -23,6 +23,7 @@ public class Transaction {
     private String destinationAccount;
     private BigDecimal amount;
     private Status status = Status.PENDING;
+    @Column(name = "transaction_date")
     private Date date;
 
     public Transaction(TransactionType transactionType,
