@@ -9,7 +9,13 @@ import java.util.Date;
 @Table(name = "TRANSACTION")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(
+            name = "transaction_sequence_generator",
+            sequenceName = "transaction_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence_generator")
+    @Column(name = "tracking_code", updatable = false, nullable = false)
     private Long TrackingCode;
 
     private TransactionType transactionType;

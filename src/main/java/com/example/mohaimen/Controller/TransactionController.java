@@ -5,6 +5,7 @@ import com.example.mohaimen.Repository.TransactionRepository;
 import com.example.mohaimen.Service.TransactionFeeCalculator;
 import com.example.mohaimen.Service.TransactionQuery;
 import com.example.mohaimen.model.*;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ public class TransactionController {
     }
 
     // DEPOSIT AMOUNT TO AN ACCOUNT
+    @Transactional
     @PostMapping("")
     public ResponseEntity<?> depositOrWithdraw(@RequestBody DepositTran depositTran) {
         BigDecimal amount = depositTran.getAmount();
@@ -110,6 +112,7 @@ public class TransactionController {
     }
 
     // TRANSFER AMOUNT FROM ONE ACCOUNT TO ANOTHER
+    @Transactional
     @PostMapping("/transfer")
     public ResponseEntity<?> transferAmount(@RequestBody Transfer transfer) {
 

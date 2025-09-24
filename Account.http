@@ -16,6 +16,8 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 ### create account for another customer
 POST http://localhost:8080/create/account/
 Content-Type: application/json
+Authorization: Basic YWRtaW46YWRtaW4xMjM0
+
 
 {
   "customerName": "Ali Rezaei",
@@ -29,6 +31,8 @@ Content-Type: application/json
 
 ### get all accounts
 GET http://localhost:8080/create/account/all
+Authorization: Basic YWRtaW46YWRtaW4xMjM0
+
 
 ### change the account date
 PUT http://localhost:8080/create/account/1111222233
