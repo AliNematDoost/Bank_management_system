@@ -17,8 +17,9 @@ public class LogChangesService {
         this.accountChangeLogRepository = accountChangeLogRepository;
     }
 
-    public void logChange(Account oldAccount, Account newAccount) {
+    public Date logChange(Account oldAccount, Account newAccount) {
         String currentUser = getCurrentUser();
+        Date changeDate = null;
 
         // national ID
         if (!oldAccount.getNationalId().equals(newAccount.getNationalId())) {
@@ -31,6 +32,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // customer name
@@ -44,6 +46,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // birthday
@@ -57,6 +60,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // Customer Type
@@ -70,6 +74,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // phoneNumber
@@ -83,6 +88,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // address
@@ -96,6 +102,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // postalCode
@@ -109,6 +116,7 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
 
         // account status
@@ -122,7 +130,10 @@ public class LogChangesService {
                     new Date()
             );
             accountChangeLogRepository.save(accountChangeLogs);
+            changeDate = new Date();
         }
+
+        return changeDate;
     }
 
     public String getCurrentUser() {

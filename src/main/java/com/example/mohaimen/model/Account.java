@@ -38,11 +38,23 @@ public class Account {
     private AccountStatus accountStatus;
     private Date AccountCreationDate;
     private BigDecimal balance;
+    private Date lastUpdated;
 
     public Account() {
     }
 
-    public Account(String nationalId, String customerName, String accountNumber, Date birthDate, CustomerType customerType, String phoneNumber, String address, String postalCode, AccountStatus accountStatus, Date accountCreationDate, BigDecimal balance) {
+    public Account(String nationalId,
+                   String customerName,
+                   String accountNumber,
+                   Date birthDate,
+                   CustomerType customerType,
+                   String phoneNumber,
+                   String address,
+                   String postalCode,
+                   AccountStatus accountStatus,
+                   Date accountCreationDate,
+                   BigDecimal balance,
+                   Date lastUpdated) {
         this.nationalId = nationalId;
         this.customerName = customerName;
         this.accountNumber = accountNumber;
@@ -52,8 +64,17 @@ public class Account {
         this.address = address;
         this.postalCode = postalCode;
         this.accountStatus = accountStatus;
-        AccountCreationDate = accountCreationDate;
+        this.AccountCreationDate = accountCreationDate;
         this.balance = balance;
+        this.lastUpdated = lastUpdated;
+    }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public BigDecimal getBalance() {

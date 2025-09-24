@@ -10,6 +10,7 @@ import com.example.mohaimen.model.Customer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -38,23 +39,27 @@ public class AccountController {
     // CREATE A NEW ACCOUNT
     @PostMapping("")
     public ResponseEntity<String> createAccount(@RequestBody Customer customer) {
+
+        // Account with the same national ID already exists
         if (accountRepository.existsAccountByNationalId(customer.getNationalId())) {
             return ResponseEntity.badRequest().body("Account for this national ID has already been made!");
         }
 
-        Account account = new Account();
         final String accountNumber = accountNumberGenerator.GenerateUniqueNumberfunction();
-        account.setAccountNumber(accountNumber);
-        account.setNationalId(customer.getNationalId());
-        account.setCustomerName(customer.getCustomerName());
-        account.setBirthDate(customer.getBirthDate());
-        account.setCustomerType(customer.getCustomerType());
-        account.setPhoneNumber(customer.getPhoneNumber());
-        account.setAddress(customer.getAddress());
-        account.setPostalCode(customer.getPostalCode());
-        account.setAccountStatus(AccountStatus.ACTIVE);
-        account.setAccountCreationDate(new java.util.Date());
-        account.setBalance(java.math.BigDecimal.ZERO);
+        Account account = new Account(
+                customer.getNationalId(),
+                customer.getCustomerName(),
+                accountNumber,
+                customer.getBirthDate(),
+                customer.getCustomerType(),
+                customer.getPhoneNumber(),
+                customer.getAddress(),
+                customer.getPostalCode(),
+                AccountStatus.ACTIVE,
+                new Date(),
+                java.math.BigDecimal.ZERO,
+                null
+        );
 
         accountRepository.save(account);
         return ResponseEntity.ok("Account created with account number: " + accountNumber);
@@ -84,7 +89,8 @@ public class AccountController {
                 currentAccount.getPostalCode(),
                 currentAccount.getAccountStatus(),
                 currentAccount.getAccountCreationDate(),
-                currentAccount.getBalance()
+                currentAccount.getBalance(),
+                currentAccount.getLastUpdated()
         );
 
         // Check if another account with the new national ID already exists
@@ -117,8 +123,13 @@ public class AccountController {
             currentAccount.setAccountStatus(newAccountData.getAccountStatus());
         }
 
+        Date lastChangeDate = logChangesService.logChange(oldAccount, currentAccount);
+
+        if (lastChangeDate != null) {
+            currentAccount.setLastUpdated(lastChangeDate);
+        }
         accountRepository.save(currentAccount);
-        logChangesService.logChange(oldAccount, currentAccount);
+
         return ResponseEntity.ok("Account updated with account number: "+ currentAccount.getAccountNumber());
     }
 
