@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "TRANSACTION")
+@Table(name = "TRANSACTIONS")
 public class Transaction {
     @Id
     @SequenceGenerator(
