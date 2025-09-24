@@ -39,6 +39,23 @@ public class Account {
     private Date AccountCreationDate;
     private BigDecimal balance;
 
+    public Account() {
+    }
+
+    public Account(String nationalId, String customerName, String accountNumber, Date birthDate, CustomerType customerType, String phoneNumber, String address, String postalCode, AccountStatus accountStatus, Date accountCreationDate, BigDecimal balance) {
+        this.nationalId = nationalId;
+        this.customerName = customerName;
+        this.accountNumber = accountNumber;
+        this.birthDate = birthDate;
+        this.customerType = customerType;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.accountStatus = accountStatus;
+        AccountCreationDate = accountCreationDate;
+        this.balance = balance;
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }

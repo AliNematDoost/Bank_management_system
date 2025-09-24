@@ -1,7 +1,9 @@
 package com.example.mohaimen.Controller;
 
+import com.example.mohaimen.Repository.AccountChangeLogRepository;
 import com.example.mohaimen.Repository.AccountRepository;
 import com.example.mohaimen.Service.AccountNumberGenerator;
+import com.example.mohaimen.Service.LogChangesService;
 import com.example.mohaimen.model.Account;
 import com.example.mohaimen.model.AccountStatus;
 import com.example.mohaimen.model.Customer;
@@ -16,9 +18,14 @@ public class AccountController {
 
     private final AccountRepository accountRepository;
     private final AccountNumberGenerator accountNumberGenerator;
-    public AccountController(AccountRepository accountRepository, AccountNumberGenerator accountNumberGenerator) {
+    private final LogChangesService logChangesService;
+
+    public AccountController(AccountRepository accountRepository,
+                             AccountNumberGenerator accountNumberGenerator,
+                             LogChangesService logChangesService) {
         this.accountRepository = accountRepository;
         this.accountNumberGenerator = accountNumberGenerator;
+        this.logChangesService = logChangesService;
     }
 
     // JSON ARRAY OF ALL USERS
@@ -66,6 +73,20 @@ public class AccountController {
             return ResponseEntity.badRequest().body("Account not found!");
         }
 
+        // Save old account values
+        Account oldAccount = new Account(currentAccount.getNationalId(),
+                currentAccount.getCustomerName(),
+                currentAccount.getAccountNumber(),
+                currentAccount.getBirthDate(),
+                currentAccount.getCustomerType(),
+                currentAccount.getPhoneNumber(),
+                currentAccount.getAddress(),
+                currentAccount.getPostalCode(),
+                currentAccount.getAccountStatus(),
+                currentAccount.getAccountCreationDate(),
+                currentAccount.getBalance()
+        );
+
         // Check if another account with the new national ID already exists
         if (!nationalID.equals(newAccountData.getNationalId())) {
             if (accountRepository.existsAccountByNationalId(newAccountData.getNationalId())) {
@@ -97,6 +118,7 @@ public class AccountController {
         }
 
         accountRepository.save(currentAccount);
+        logChangesService.logChange(oldAccount, currentAccount);
         return ResponseEntity.ok("Account updated with account number: "+ currentAccount.getAccountNumber());
     }
 
