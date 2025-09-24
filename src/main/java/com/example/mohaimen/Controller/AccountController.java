@@ -3,6 +3,7 @@ package com.example.mohaimen.Controller;
 import com.example.mohaimen.Repository.AccountChangeLogRepository;
 import com.example.mohaimen.Repository.AccountRepository;
 import com.example.mohaimen.Service.AccountNumberGenerator;
+import com.example.mohaimen.Service.AccountService;
 import com.example.mohaimen.Service.LogChangesService;
 import com.example.mohaimen.model.Account;
 import com.example.mohaimen.model.AccountStatus;
@@ -17,52 +18,22 @@ import java.util.List;
 @RequestMapping("/create/account/")
 public class AccountController {
 
-    private final AccountRepository accountRepository;
-    private final AccountNumberGenerator accountNumberGenerator;
-    private final LogChangesService logChangesService;
+    private final AccountService accountService;
 
-    public AccountController(AccountRepository accountRepository,
-                             AccountNumberGenerator accountNumberGenerator,
-                             LogChangesService logChangesService) {
-        this.accountRepository = accountRepository;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.logChangesService = logChangesService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     // JSON ARRAY OF ALL USERS
     @GetMapping("/all")
     public Account[] getAllAccounts() {
-        java.util.List<Account> accounts = accountRepository.findAll();
-        return accounts.toArray(new Account[0]);
+        return accountService.getAllAccounts();
     }
 
     // CREATE A NEW ACCOUNT
     @PostMapping("")
     public ResponseEntity<String> createAccount(@RequestBody Customer customer) {
-
-        // Account with the same national ID already exists
-        if (accountRepository.existsAccountByNationalId(customer.getNationalId())) {
-            return ResponseEntity.badRequest().body("Account for this national ID has already been made!");
-        }
-
-        final String accountNumber = accountNumberGenerator.GenerateUniqueNumberfunction();
-        Account account = new Account(
-                customer.getNationalId(),
-                customer.getCustomerName(),
-                accountNumber,
-                customer.getBirthDate(),
-                customer.getCustomerType(),
-                customer.getPhoneNumber(),
-                customer.getAddress(),
-                customer.getPostalCode(),
-                AccountStatus.ACTIVE,
-                new Date(),
-                java.math.BigDecimal.ZERO,
-                null
-        );
-
-        accountRepository.save(account);
-        return ResponseEntity.ok("Account created with account number: " + accountNumber);
+        return accountService.createAccountService(customer);
     }
 
     // UPDATE AN ACCOUNT
@@ -70,94 +41,25 @@ public class AccountController {
     @PutMapping("/{nationalID}")
     public ResponseEntity<String> UpdateAccount(@PathVariable String nationalID,
                                                 @RequestBody Account newAccountData) {
-
-        Account currentAccount = accountRepository.findById(nationalID).orElse(null);
-
-        // accountNumber not found
-        if (currentAccount == null) {
-            return ResponseEntity.badRequest().body("Account not found!");
-        }
-
-        // Save old account values
-        Account oldAccount = new Account(currentAccount.getNationalId(),
-                currentAccount.getCustomerName(),
-                currentAccount.getAccountNumber(),
-                currentAccount.getBirthDate(),
-                currentAccount.getCustomerType(),
-                currentAccount.getPhoneNumber(),
-                currentAccount.getAddress(),
-                currentAccount.getPostalCode(),
-                currentAccount.getAccountStatus(),
-                currentAccount.getAccountCreationDate(),
-                currentAccount.getBalance(),
-                currentAccount.getLastUpdated()
-        );
-
-        // Check if another account with the new national ID already exists
-        if (!nationalID.equals(newAccountData.getNationalId())) {
-            if (accountRepository.existsAccountByNationalId(newAccountData.getNationalId())) {
-                return ResponseEntity.badRequest().body("Another account with this national ID already exists!");
-            }
-            currentAccount.setNationalId(newAccountData.getNationalId());
-        }
-
-        if (newAccountData.getCustomerName() != null) {
-            currentAccount.setCustomerName(newAccountData.getCustomerName());
-        }
-        if (newAccountData.getBirthDate() != null) {
-            currentAccount.setBirthDate(newAccountData.getBirthDate());
-        }
-        if (newAccountData.getCustomerType() != null) {
-            currentAccount.setCustomerType(newAccountData.getCustomerType());
-        }
-        if (newAccountData.getPhoneNumber() != null) {
-            currentAccount.setPhoneNumber(newAccountData.getPhoneNumber());
-        }
-        if (newAccountData.getAddress() != null) {
-            currentAccount.setAddress(newAccountData.getAddress());
-        }
-        if (newAccountData.getPostalCode() != null) {
-            currentAccount.setPostalCode(newAccountData.getPostalCode());
-        }
-        if (newAccountData.getAccountStatus() != null) {
-            currentAccount.setAccountStatus(newAccountData.getAccountStatus());
-        }
-
-        Date lastChangeDate = logChangesService.logChange(oldAccount, currentAccount);
-
-        if (lastChangeDate != null) {
-            currentAccount.setLastUpdated(lastChangeDate);
-        }
-        accountRepository.save(currentAccount);
-
-        return ResponseEntity.ok("Account updated with account number: "+ currentAccount.getAccountNumber());
+        return accountService.updateAccountService(nationalID, newAccountData);
     }
 
-    // RETRIEVE AN ACCOUNT BY NATIONAL ID
+    // RETRIEVE AN ACCOUNT BY ACCOUNT NUMBER
     @GetMapping("/accountNumber/{accountNumber}" )
     public Account[] getAccount(@PathVariable String accountNumber) {
-        List<Account> account = accountRepository.findAllByAccountNumber(accountNumber);
-        return account.toArray(new Account[0]);
+        return accountService.getAccountByAccountNumber(accountNumber);
     }
 
     // get account number by national id
     @GetMapping("/nationalID/{nationalID}" )
     public String getAccountNumber(@PathVariable String nationalID) {
-        Account account = accountRepository.findById(nationalID).orElse(null);
-        if (account == null) {
-            return "Account not found!";
-        }
-        return account.getAccountNumber();
+        return accountService.getAccountNumberByNationalId(nationalID);
     }
 
     // get the account balance by account number
     @GetMapping("/balance/{accountNumber}" )
     public String getAccountBalance(@PathVariable String accountNumber) {
-        List<Account> account = accountRepository.findAllByAccountNumber(accountNumber);
-        if (account.isEmpty()) {
-            return "Account not found!";
-        }
-        return "Account balance: " + account.toArray(new Account[0])[0].getBalance();
+        return accountService.getBalanceByAccountNumber(accountNumber);
     }
 }
 

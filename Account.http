@@ -59,7 +59,7 @@ GET http://localhost:8080/create/account/nationalID/1111222234
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### get the account balance by account number
-GET http://localhost:8080/create/account/balance/43318537612452
+GET http://localhost:8080/create/account/balance/26218295522660
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### deposit money to the account
@@ -69,7 +69,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "43121265728963",
+  "accountNumber": "57265895847867",
   "amount": 2500000000.00
 }
 
@@ -80,7 +80,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "WITHDRAW",
-  "accountNumber": "43318537612452",
+  "accountNumber": "26218295522660",
   "amount": 250000.00
 }
 
@@ -91,8 +91,8 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "43121265728963",
-  "toAccount": "43318537612452",
+  "fromAccount": "57265895847867",
+  "toAccount": "57265895847867",
   "amount": 15000000.00
 }
 
@@ -102,7 +102,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
 ### 1. Get all transactions for a specific account
-GET http://localhost:8080/Transaction/history?accountNumber=43318537612452
+GET http://localhost:8080/Transaction/history?accountNumber=57265895847867
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 2. Get transactions with date range
