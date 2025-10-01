@@ -31,6 +31,22 @@ public class AccountService {
     // create account service
     public ResponseEntity<?> createAccountService(Customer customer) {
 
+        // preprocessing and validation
+        if (customer.getCustomerName() == null || customer.getCustomerName().isEmpty() ||
+                customer.getNationalId() == null || customer.getNationalId().isEmpty() ||
+                customer.getBirthDate() == null || customer.getBirthDate().toString().isEmpty() ||
+                customer.getCustomerType() == null || customer.getCustomerType().toString().isEmpty() ||
+                customer.getPhoneNumber() == null || customer.getPhoneNumber().isEmpty() ||
+                customer.getAddress() == null || customer.getAddress().isEmpty() ||
+                customer.getPostalCode() == null || customer.getPostalCode().isEmpty()) {
+
+            Map<String, Object> response = Map.of(
+                    "message", "All fields are required!",
+                    "providedData", customer
+            );
+            return ResponseEntity.badRequest().body(response);
+        }
+
         // Account with the same national ID already exists
         if (accountRepository.existsAccountByNationalId(customer.getNationalId())) {
             return ResponseEntity.badRequest().body("Account for this national ID has already been made!");
