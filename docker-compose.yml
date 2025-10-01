@@ -1,29 +1,16 @@
 services:
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: myuser
-      RABBITMQ_DEFAULT_PASS: mypassword
-    restart: unless-stopped
-
-  # Modern Oracle XE 21c - Works perfectly with Hibernate 6.x
-  oracle-db:
-    image: gvenzl/oracle-xe:21-slim
-    container_name: oracle-db
-    ports:
-      - "1521:1521"
-    environment:
-      - ORACLE_PASSWORD=oracle123
-      - APP_USER=mohaimen
-      - APP_USER_PASSWORD=mohaimen123
-    restart: unless-stopped
-    volumes:
-      - oracle-data:/opt/oracle/oradata
+    oracle-db:
+        image: gvenzl/oracle-xe:21-slim
+        container_name: oracle-db
+        ports:
+            - "1521:1521"
+        environment:
+            - ORACLE_PASSWORD=oracle123
+            - APP_USER=mohaimen
+            - APP_USER_PASSWORD=mohaimen123
+        restart: unless-stopped
+        volumes:
+            - oracle-data:/opt/oracle/oradata
 
 volumes:
-  oracle-data:
+    oracle-data:
