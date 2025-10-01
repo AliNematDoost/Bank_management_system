@@ -3,6 +3,7 @@ package com.example.mohaimen.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,7 +21,7 @@ public class Account {
 
     @Column(name = "birth_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "customer_type", nullable = false)
@@ -46,7 +47,7 @@ public class Account {
     public Account(String nationalId,
                    String customerName,
                    String accountNumber,
-                   Date birthDate,
+                   LocalDate birthDate,
                    CustomerType customerType,
                    String phoneNumber,
                    String address,
@@ -117,11 +118,11 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

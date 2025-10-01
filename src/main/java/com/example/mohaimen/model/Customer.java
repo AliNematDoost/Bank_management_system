@@ -1,12 +1,13 @@
 package com.example.mohaimen.model;
 
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Customer {
     private String customerName;
     private String nationalId;
-    private Date birthDate;
+    private LocalDate birthDate;
     private CustomerType customerType;
     private String phoneNumber;
     private String address;
@@ -24,10 +25,10 @@ public class Customer {
     public void setNationalId(String nationalId) {
         this.nationalId = nationalId;
     }
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
     public CustomerType getCustomerType() {
