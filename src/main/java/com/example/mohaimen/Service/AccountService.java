@@ -49,7 +49,13 @@ public class AccountService {
 
         // Account with the same national ID already exists
         if (accountRepository.existsAccountByNationalId(customer.getNationalId())) {
-            return ResponseEntity.badRequest().body("Account for this national ID has already been made!");
+
+            Account accountByNationalId = accountRepository.findAccountByNationalId(customer.getNationalId());
+            Map<String, Object> response = Map.of(
+                    "message", "Account for this national ID has already been made!",
+                    "Account", accountByNationalId
+            );
+            return ResponseEntity.badRequest().body(response);
         }
 
         final String accountNumber = accountNumberGenerator.GenerateUniqueNumberfunction();
@@ -85,7 +91,12 @@ public class AccountService {
 
         // accountNumber not found
         if (currentAccount == null) {
-            return ResponseEntity.badRequest().body("Account not found!");
+
+            Map<String, Object> response = Map.of(
+                    "message", "Account not found for entered national ID! \nCreate Account first.",
+                    "national ID", nationalID
+            );
+            return ResponseEntity.badRequest().body(response);
         }
 
         // Save old account values
@@ -106,30 +117,56 @@ public class AccountService {
         // Check if another account with the new national ID already exists
         if (!nationalID.equals(newAccountData.getNationalId())) {
             if (accountRepository.existsAccountByNationalId(newAccountData.getNationalId())) {
-                return ResponseEntity.badRequest().body("Another account with this national ID already exists!");
+
+                Map<String, Object> response = Map.of(
+                        "message", "Another account with this national ID already exists!",
+                        "national ID", newAccountData.getNationalId()
+                );
+                return ResponseEntity.badRequest().body(response);
             }
+
             currentAccount.setNationalId(newAccountData.getNationalId());
         }
 
-        if (newAccountData.getCustomerName() != null) {
+        if (newAccountData.getCustomerName() != null
+                && !newAccountData.getCustomerName().isEmpty()) {
+
             currentAccount.setCustomerName(newAccountData.getCustomerName());
         }
-        if (newAccountData.getBirthDate() != null) {
+
+        if (newAccountData.getBirthDate() != null
+                && !newAccountData.getBirthDate().toString().isEmpty()) {
+
             currentAccount.setBirthDate(newAccountData.getBirthDate());
         }
-        if (newAccountData.getCustomerType() != null) {
+
+        if (newAccountData.getCustomerType() != null
+                && !newAccountData.getCustomerType().toString().isEmpty()) {
+
             currentAccount.setCustomerType(newAccountData.getCustomerType());
         }
-        if (newAccountData.getPhoneNumber() != null) {
+
+        if (newAccountData.getPhoneNumber() != null
+                && !newAccountData.getPhoneNumber().isEmpty()) {
+
             currentAccount.setPhoneNumber(newAccountData.getPhoneNumber());
         }
-        if (newAccountData.getAddress() != null) {
+
+        if (newAccountData.getAddress() != null
+                && !newAccountData.getAddress().isEmpty()) {
+
             currentAccount.setAddress(newAccountData.getAddress());
         }
-        if (newAccountData.getPostalCode() != null) {
+
+        if (newAccountData.getPostalCode() != null
+                && !newAccountData.getPostalCode().isEmpty()) {
+
             currentAccount.setPostalCode(newAccountData.getPostalCode());
         }
-        if (newAccountData.getAccountStatus() != null) {
+
+        if (newAccountData.getAccountStatus() != null
+                && !newAccountData.getAccountStatus().toString().isEmpty()) {
+
             currentAccount.setAccountStatus(newAccountData.getAccountStatus());
         }
 
@@ -138,6 +175,7 @@ public class AccountService {
         if (lastChangeDate != null) {
             currentAccount.setLastUpdated(lastChangeDate);
         }
+
         accountRepository.save(currentAccount);
 
         Map<String, Object> response = Map.of(

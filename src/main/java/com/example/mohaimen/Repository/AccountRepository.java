@@ -19,4 +19,5 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT a FROM Account a WHERE a.accountNumber = :accountNumber")
     Optional<Account> findByAccountNumber(@Param("accountNumber") String accountNumber);
+    Account findAccountByNationalId(String nationalId);
 }
