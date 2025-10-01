@@ -53,7 +53,7 @@ public class TransactionController {
 
     // transaction history
     @GetMapping("/history")
-    public ResponseEntity<Page<Transaction>> getTransactionHistory(
+    public ResponseEntity<?> getTransactionHistory(
             @RequestParam(required = false) String accountNumber,
             @RequestParam(required = false) String sourceAccountNumber,
             @RequestParam(required = false) String destinationAccountNumber,

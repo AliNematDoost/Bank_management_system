@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@Service
+//@Service
 public class TransactionQuery {
 
     public static Specification<Transaction> filter(
@@ -68,7 +68,7 @@ public class TransactionQuery {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("date"), toDate));
             }
 
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]) );
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
 }

@@ -331,7 +331,7 @@ public class TransactionService {
 
 
     // transaction history
-    public ResponseEntity<Page<Transaction>> getTransactionsHistory(String accountNumber,
+    public ResponseEntity<?> getTransactionsHistory(String accountNumber,
                                                                     String sourceAccountNumber,
                                                                     String destinationAccountNumber,
                                                                     TransactionType transactionType,
@@ -360,6 +360,11 @@ public class TransactionService {
         );
 
         Page<Transaction> transactions = transactionRepository.findAll(spec, pageable);
-        return ResponseEntity.ok(transactions);
+
+        Map<String, Object> response = Map.of(
+                "message", "Transaction history fetched successfully",
+                "transactions", transactions
+        );
+        return ResponseEntity.ok(response);
     }
 }

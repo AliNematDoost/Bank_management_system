@@ -70,8 +70,8 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "79065927759225",
-  "amount": 2500000000.00
+  "accountNumber": "40688180801876",
+  "amount": 2800000000.00
 }
 
 ### withdraw money from the account
@@ -103,15 +103,15 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
 ### 1. Get all transactions for a specific account
-GET http://localhost:8080/Transaction/history?accountNumber=61244263187070
+GET http://localhost:8080/Transaction/history?accountNumber=40688180801876
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 2. Get transactions with date range
-GET http://localhost:8080/Transaction/history?accountNumber=28589769858450&fromDate=2024-03-21&toDate=2024-09-23
+GET http://localhost:8080/Transaction/history?accountNumber=40688180801876&fromDate=2024-03-21&toDate=2026-09-23
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 3. Get transactions with amount filter
-GET http://localhost:8080/Transaction/history?accountNumber=49785737311071&minAmount=1000000&maxAmount=100000000
+GET http://localhost:8080/Transaction/history?accountNumber=40688180801876&minAmount=10000&maxAmount=100000000000
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 4. Get last 100 deposit transactions
@@ -127,9 +127,9 @@ GET http://localhost:8080/Transaction/history?accountNumber=28589769858450&trans
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 7. Get all transactions from a specific source account
-GET http://localhost:8080/Transaction/history?sourceAccountNumber=43318537612452
+GET http://localhost:8080/Transaction/history?sourceAccountNumber=40688180801876
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 8. Get all transactions to a specific destination account
-GET http://localhost:8080/Transaction/history?destinationAccountNumber=69585518378115
+GET http://localhost:8080/Transaction/history?destinationAccountNumber=40688180801876
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
