@@ -3,6 +3,7 @@ package com.example.mohaimen.model;
 import java.math.BigDecimal;
 
 public class Transfer {
+
     private TransactionType transactionType = TransactionType.TRANSFER;
     private String fromAccount;
     private String toAccount;

@@ -14,8 +14,15 @@ public class Transaction {
             sequenceName = "transaction_sequence",
             allocationSize = 1
     )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_sequence_generator")
-    @Column(name = "tracking_code", updatable = false, nullable = false)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "transaction_sequence_generator"
+    )
+    @Column(
+            name = "tracking_code",
+            updatable = false,
+            nullable = false
+    )
     private Long TrackingCode;
 
     private TransactionType transactionType;

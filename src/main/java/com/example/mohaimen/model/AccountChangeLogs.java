@@ -8,8 +8,15 @@ import java.util.Date;
 @Table(name = "account_change_logs")
 public class AccountChangeLogs {
     @Id
-    @SequenceGenerator(name = "audit_seq", sequenceName = "account_audit_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit_seq")
+    @SequenceGenerator(
+            name = "audit_seq",
+            sequenceName = "account_audit_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "audit_seq"
+    )
     private Long id;
 
     private String accountNumber;
