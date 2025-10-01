@@ -53,7 +53,6 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authz -> authz
-                        // Remove H2 console access since we're using Oracle now
                         .anyRequest().authenticated())
                 .httpBasic(httpBasic ->
                         httpBasic.authenticationEntryPoint(authenticationEntryPoint));

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -47,37 +48,90 @@ public class TransactionService {
                     new Date());
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
-            return ResponseEntity.badRequest().body("Account not found!");
+            return ResponseEntity.notFound().build();
         }
 
         Account account = optAccount.get();
 
-        // transaction type not valid
-        if (depositTran.getTransactionType() == null) {
-            Transaction transaction = new Transaction(TransactionType.INVALID,
-                    null,
-                    null,
-                    amount,
-                    new Date());
-            transaction.setStatus(Status.FAILED);
-            transactionRepository.save(transaction);
-            return ResponseEntity.badRequest().body("Transaction type not valid!");
-        }
-
+        // transaction type == DEPOSIT
         if (depositTran.getTransactionType().equals(TransactionType.DEPOSIT)) {
-            account.setBalance(account.getBalance().add(amount));
-            accountRepository.save(account);
 
-            Transaction transaction1 = new Transaction(TransactionType.DEPOSIT,
-                    transactionFeeCalculator.getBankAccountNumber(),
-                    accountNumber,
-                    amount,
-                    new Date());
-            transaction1.setStatus(Status.SUCCESS);
-            transactionRepository.save(transaction1);
-            return ResponseEntity.ok(transaction1);
+            if (account.getAccountStatus().equals(AccountStatus.ACTIVE)) {
+
+                account.setBalance(account.getBalance().add(amount));
+                accountRepository.save(account);
+
+                Transaction transaction1 = new Transaction(TransactionType.DEPOSIT,
+                        transactionFeeCalculator.getBankAccountNumber(),
+                        accountNumber,
+                        amount,
+                        new Date());
+                transaction1.setStatus(Status.SUCCESS);
+                transactionRepository.save(transaction1);
+
+                Map<String, Object> response = Map.of(
+                        "message", "Deposit successful",
+                        "transaction", transaction1
+                );
+                return ResponseEntity.ok(response);
+
+            } else {
+                Transaction transaction = new Transaction(TransactionType.DEPOSIT,
+                        transactionFeeCalculator.getBankAccountNumber(),
+                        accountNumber,
+                        amount,
+                        new Date());
+                transaction.setStatus(Status.FAILED);
+                transactionRepository.save(transaction);
+
+                Map<String, Object> response = Map.of(
+                        "message", "Account is not active",
+                        "accountStatus", account.getAccountStatus()
+                );
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        // transaction type == WITHDRAW
         } else if (depositTran.getTransactionType().equals(TransactionType.WITHDRAW)) {
-            if (account.getBalance().compareTo(amount) < 0) {
+
+            // check if account is active
+            if (account.getAccountStatus().equals(AccountStatus.ACTIVE)) {
+
+                if (account.getBalance().compareTo(amount) < 0) {
+                    Transaction transaction = new Transaction(TransactionType.WITHDRAW,
+                            accountNumber,
+                            transactionFeeCalculator.getBankAccountNumber(),
+                            amount,
+                            new Date());
+                    transaction.setStatus(Status.FAILED);
+                    transactionRepository.save(transaction);
+
+                    Map<String, Object> response = Map.of(
+                            "message", "Not enough balance in account!",
+                            "accountBalance", account.getBalance(),
+                            "withdrawAmount", amount
+                    );
+                    return ResponseEntity.badRequest().body(response);
+                }
+
+                account.setBalance(account.getBalance().subtract(amount));
+                accountRepository.save(account);
+
+                Transaction transaction2 = new Transaction(TransactionType.WITHDRAW,
+                        accountNumber,
+                        transactionFeeCalculator.getBankAccountNumber(),
+                        amount,
+                        new Date());
+                transaction2.setStatus(Status.SUCCESS);
+                transactionRepository.save(transaction2);
+
+                Map<String, Object> response = Map.of(
+                        "message", "Withdrawal successful",
+                        "transaction", transaction2
+                );
+                return ResponseEntity.ok(transaction2);
+
+            } else {
                 Transaction transaction = new Transaction(TransactionType.WITHDRAW,
                         accountNumber,
                         transactionFeeCalculator.getBankAccountNumber(),
@@ -85,22 +139,27 @@ public class TransactionService {
                         new Date());
                 transaction.setStatus(Status.FAILED);
                 transactionRepository.save(transaction);
-                return ResponseEntity.badRequest().body("Not enough balance in account!");
+
+                Map<String, Object> response = Map.of(
+                        "message", "Account is not active",
+                        "accountStatus", account.getAccountStatus()
+                );
+                return ResponseEntity.badRequest().body(response);
             }
-
-            account.setBalance(account.getBalance().subtract(amount));
-            accountRepository.save(account);
-
-            Transaction transaction2 = new Transaction(TransactionType.WITHDRAW,
-                    accountNumber,
-                    transactionFeeCalculator.getBankAccountNumber(),
+        } else {
+            Transaction transaction = new Transaction(TransactionType.INVALID,
+                    null,
+                    null,
                     amount,
                     new Date());
-            transaction2.setStatus(Status.SUCCESS);
-            transactionRepository.save(transaction2);
-            return ResponseEntity.ok(transaction2);
-        } else {
-            return ResponseEntity.badRequest().build();
+            transaction.setStatus(Status.FAILED);
+            transactionRepository.save(transaction);
+
+            Map<String, Object> response = Map.of(
+                    "message", "Transaction type not valid",
+                    "transactionType", depositTran.getTransactionType()
+            );
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -113,7 +172,10 @@ public class TransactionService {
         Optional<Account> optToAccount = accountRepository.findByAccountNumber(transfer.getToAccount());
         Account fromAccount = optFromAccount.orElse(null);
         Account toAccount = optToAccount.orElse(null);
+        boolean fromAccountExists = optFromAccount.isPresent();
+        boolean toAccountExists = optToAccount.isPresent();
 
+        // one or both accounts not found
         if (optFromAccount.isEmpty() || optToAccount.isEmpty()) {
             Transaction transaction = new Transaction(TransactionType.TRANSFER,
                     fromAccount != null ? fromAccount.getAccountNumber() : null,
@@ -123,7 +185,21 @@ public class TransactionService {
 
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
-            return ResponseEntity.badRequest().body("One or both accounts not found!");
+
+            String message;
+            if (!fromAccountExists && !toAccountExists) {
+                message = "Both accounts not found!";
+            } else if (!fromAccountExists) {
+                message = "From account not found!";
+            } else {
+                message = "To account not found!";
+            }
+            Map<String, String> response = Map.of(
+                    "message", message,
+                    "FromAccountNumber", transfer.getFromAccount(),
+                    "ToAccountNumber", transfer.getToAccount()
+            );
+            return ResponseEntity.badRequest().body(response);
         }
 
         // check if fromAccount and toAccount are different
@@ -135,7 +211,13 @@ public class TransactionService {
                     new Date());
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
-            return ResponseEntity.badRequest().body("From and To account cannot be the same!");
+
+            Map<String, Object> response = Map.of(
+                    "message", "From and To account cannot be the same!",
+                    "FromAccountNumber", transfer.getFromAccount(),
+                    "ToAccountNumber", transfer.getToAccount()
+            );
+            return ResponseEntity.badRequest().body(response);
         }
 
         // check if fromAccount and toAccount are active
@@ -151,7 +233,13 @@ public class TransactionService {
                     new Date());
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
-            return ResponseEntity.badRequest().body("From and To account must be active!");
+
+            Map<String, Object> response = Map.of(
+                    "message", "From and To account must be active!",
+                    "fromAccountStatus", fromAccount.getAccountStatus(),
+                    "toAccountStatus", toAccount.getAccountStatus()
+            );
+            return ResponseEntity.badRequest().body(response);
         }
 
         // check if fromAccount has sufficient balance
@@ -167,7 +255,15 @@ public class TransactionService {
                     new Date());
             transaction.setStatus(Status.FAILED);
             transactionRepository.save(transaction);
-            return ResponseEntity.badRequest().body("Not enough balance in from account!");
+
+            Map<String, Object> response = Map.of(
+                    "message", "Not enough balance in from account!",
+                    "fromAccountBalance", fromAccount.getBalance(),
+                    "transferAmount", amount,
+                    "transactionFee", fee,
+                    "total", amount.add(fee)
+            );
+            return ResponseEntity.badRequest().body(response);
         }
 
         // transfer amount
@@ -196,7 +292,13 @@ public class TransactionService {
                 new Date());
         TransactionFee.setStatus(Status.SUCCESS);
         transactionRepository.save(TransactionFee);
-        return ResponseEntity.ok(transaction);
+
+        Map<String, Object> response = Map.of(
+                "message", "Transfer successful",
+                "transferTransaction", transaction,
+                "feeTransaction", TransactionFee
+        );
+        return ResponseEntity.ok(response);
     }
 
 
@@ -206,14 +308,24 @@ public class TransactionService {
 
         // tracking code in not found
         if (transaction.isEmpty()) {
-            return ResponseEntity.badRequest().body("Transaction not found!");
+            return ResponseEntity.notFound().build();
         }
 
         // transaction is FAILED or SUCCESS
         if (transaction.get().getStatus().equals(Status.FAILED)) {
-            return ResponseEntity.badRequest().body("Transaction is failed at " + transaction.get().getDate());
+
+            Map<String, Object> response = Map.of(
+                    "message", "Transaction is FAILED",
+                    "transaction", transaction.get()
+            );
+            return ResponseEntity.badRequest().body(response);
         } else {
-            return ResponseEntity.ok(transaction.get());
+
+            Map<String, Object> response = Map.of(
+                    "message", "Transaction is SUCCESSFUL",
+                    "transaction", transaction.get()
+            );
+            return ResponseEntity.ok(response);
         }
     }
 

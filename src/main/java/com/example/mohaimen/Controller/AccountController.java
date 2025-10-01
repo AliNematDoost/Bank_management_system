@@ -11,6 +11,7 @@ import com.example.mohaimen.model.Customer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -21,44 +22,50 @@ public class AccountController {
     private final AccountService accountService;
 
     public AccountController(AccountService accountService) {
+
         this.accountService = accountService;
     }
 
     // JSON ARRAY OF ALL USERS
     @GetMapping("/all")
     public Account[] getAllAccounts() {
+
         return accountService.getAllAccounts();
     }
 
     // CREATE A NEW ACCOUNT
     @PostMapping("")
-    public ResponseEntity<String> createAccount(@RequestBody Customer customer) {
+    public ResponseEntity<?> createAccount(@RequestBody Customer customer) {
+
         return accountService.createAccountService(customer);
     }
 
     // UPDATE AN ACCOUNT
     // just update fields you want and set other fields to NULL
     @PutMapping("/{nationalID}")
-    public ResponseEntity<String> UpdateAccount(@PathVariable String nationalID,
-                                                @RequestBody Account newAccountData) {
+    public ResponseEntity<?> UpdateAccount(@PathVariable String nationalID, @RequestBody Account newAccountData) {
+
         return accountService.updateAccountService(nationalID, newAccountData);
     }
 
     // RETRIEVE AN ACCOUNT BY ACCOUNT NUMBER
     @GetMapping("/accountNumber/{accountNumber}" )
-    public Account[] getAccount(@PathVariable String accountNumber) {
+    public ResponseEntity<?> getAccount(@PathVariable String accountNumber) {
+
         return accountService.getAccountByAccountNumber(accountNumber);
     }
 
     // get account number by national id
     @GetMapping("/nationalID/{nationalID}" )
-    public String getAccountNumber(@PathVariable String nationalID) {
+    public ResponseEntity<?> getAccountNumber(@PathVariable String nationalID) {
+
         return accountService.getAccountNumberByNationalId(nationalID);
     }
 
     // get the account balance by account number
     @GetMapping("/balance/{accountNumber}" )
-    public String getAccountBalance(@PathVariable String accountNumber) {
+    public ResponseEntity<?> getAccountBalance(@PathVariable String accountNumber) {
+
         return accountService.getBalanceByAccountNumber(accountNumber);
     }
 }
