@@ -26,7 +26,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
   "phoneNumber": "09999888777",
   "address": "Isfahan, New Address, Enghelab Street",
   "postalCode": "8173111112",
-  "accountStatus": "BLOCKED"
+  "accountStatus": "ACTIVE"
 }
 
 
@@ -51,12 +51,12 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
 ### find the account by account number
-GET http://localhost:8080/create/account/accountNumber/60753464451321
+GET http://localhost:8080/create/account/accountNumber/61244263187071
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
 ### find the account number by national id
-GET http://localhost:8080/create/account/nationalID/1111222234
+GET http://localhost:8080/create/account/nationalID/1111222231
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### get the account balance by account number
@@ -70,7 +70,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "DEPOSIT",
-  "accountNumber": "12474331003340",
+  "accountNumber": "61244263187070",
   "amount": 2500000000.00
 }
 
@@ -81,7 +81,7 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "WITHDRAW",
-  "accountNumber": "12474331003340",
+  "accountNumber": "61244263187070",
   "amount": 250000.00
 }
 
@@ -92,18 +92,18 @@ Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 {
   "transactionType": "TRANSFER",
-  "fromAccount": "60753464451321",
-  "toAccount": "12474331003340",
-  "amount": 1500000000000.00
+  "fromAccount": "61244263187070",
+  "toAccount": "16385246076071",
+  "amount": 1500000.00
 }
 
 ### get transaction by tracking code
-GET http://localhost:8080/Transaction/2
+GET http://localhost:8080/Transaction/4
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 
 ### 1. Get all transactions for a specific account
-GET http://localhost:8080/Transaction/history?accountNumber=69585518378115
+GET http://localhost:8080/Transaction/history?accountNumber=61244263187070
 Authorization: Basic YWRtaW46YWRtaW4xMjM0
 
 ### 2. Get transactions with date range

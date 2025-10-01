@@ -37,8 +37,11 @@ public class Account {
     private String postalCode;
 
     private AccountStatus accountStatus;
+
     private Date AccountCreationDate;
+
     private BigDecimal balance;
+
     private Date lastUpdated;
 
     public Account() {
